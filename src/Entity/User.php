@@ -26,7 +26,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: '`user`')]
 #[ApiResource(
     operations: [
-        new Get(),
+        new GetCollection(
+            security: "is_granted('ROLE_ADMIN')"
+        ),
+        new Get(
+            security: "is_granted('ROLE_ADMIN') || object === user"
+        ),
         new Post(
             uriTemplate: '/users/createUser',
             controller: UserCreateAction::class,
@@ -37,7 +42,6 @@ use Symfony\Component\Validator\Constraints as Assert;
             uriTemplate: '/users/auth',
             name: 'userAuth'
         ),
-        new GetCollection(),
         new Put(),
         new Delete(),
 
