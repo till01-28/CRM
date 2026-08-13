@@ -16,7 +16,9 @@ use App\Controller\UserCreateAction;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -30,6 +32,10 @@ use Symfony\Component\Validator\Constraints as Assert;
             controller: UserCreateAction::class,
             validate: false,
             name: 'createUser'
+        ),
+        new Post(
+            uriTemplate: '/users/auth',
+            name: 'userAuth'
         ),
         new GetCollection(),
         new Put(),
@@ -46,36 +52,55 @@ use Symfony\Component\Validator\Constraints as Assert;
 ])]
 #[ApiFilter(OrderFilter::class, properties: [ 'id'])]
 #[ApiFilter(DateFilter::class, properties: ['lastActivityAt'])]
-
-class User implements PasswordAuthenticatedUserInterface
+#[UniqueEntity('email', message: 'This email is already exist')]
+class User implements PasswordAuthenticatedUserInterface, UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['user:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\Length(min: 2, minMessage:'Field should be at least 2 characters')]
     #[Assert\NotBlank(message: 'This field should not be blank')]
     #[Groups(['user:read', 'user:write'])]
+    #[Assert\Regex(
+        pattern: '/^[a-zA-Z]{2,}$/',
+        message: 'Family name should contain only letters and at least 2 characters long'
+    )]
     private ?string $familyName = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\Length(min:2, minMessage: 'Field should be at least 2 characters')]
     #[Assert\NotBlank(message:'This field should not be blank')]
     #[Groups(['user:read','user:write'])]
+    #[Assert\Regex(
+        pattern: '/^[a-zA-Z]{2,}$/',
+        message: 'Given name should contain only letters and at least 2 characters long'
+    )]
     private ?string $givenName = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\Length(min:15, minMessage: 'Field should be at least 15 characters')]
+    #[Assert\Length(min:12, minMessage: 'Field should be at least 12 characters')]
     #[Assert\NotBlank(message:'This field should not be blank')]
+    #[Assert\Email(message: 'This is not a valid email address')]
     #[Groups(['user:read','user:write'])]
+    #[Assert\Regex(
+        pattern: '/^[^\s@]+@[^\s@]+\.[^\s@]{2,4}$/',
+        message: 'Invalid email address, please provide a valid email address.'
+    )]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\Length(min:8, minMessage: 'Field should be at least 8 characters')]
     #[Assert\NotBlank(message:'This field should not be blank')]
     #[Groups(['user:read','user:write'])]
+    #[Assert\Regex(
+        pattern: '/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#(){}[\]^+=._-]).{8,}$/',
+        message: 'Password should contain at least one uppercase, one lowercase, one digit, one special character and
+        8 characters.'
+    )]
     private ?string $password = null;
 
     #[ORM\Column]
@@ -161,5 +186,20 @@ class User implements PasswordAuthenticatedUserInterface
         $this->lastActivityAt = $lastActivityAt;
 
         return $this;
+    }
+
+    public function getRoles(): array
+    {
+        return ["ROLE_USER"];
+    }
+
+    public function eraseCredentials(): void
+    {
+
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->getEmail();
     }
 }

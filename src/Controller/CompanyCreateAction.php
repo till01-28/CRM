@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use ApiPlatform\Validator\ValidatorInterface;
 use App\Component\Company\CompanyFactory;
 use App\Component\Company\CompanyManager;
 use App\Entity\Company;
@@ -13,7 +14,9 @@ class CompanyCreateAction extends AbstractController
 {
     public function __construct(
         private readonly CompanyFactory $companyFactory,
-        private readonly CompanyManager $companyManager)
+        private readonly CompanyManager $companyManager,
+        private readonly ValidatorInterface $validator
+    )
     {
 
     }
@@ -23,6 +26,8 @@ class CompanyCreateAction extends AbstractController
      */
     public function __invoke(Company $company):Company
     {
+        $this->validator->validate($company);
+
         $company = $this->companyFactory->create(
             $company->getName(),
             $company->getEmail(),
