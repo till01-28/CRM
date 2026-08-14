@@ -115,6 +115,10 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     #[Groups(['user:read'])]
     private ?DateTimeImmutable $lastActivityAt = null;
 
+    #[ORM\ManyToOne]
+    #[Groups(['user:read', 'user:write'])]
+    private ?MediaObject $image = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -205,5 +209,17 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     public function getUserIdentifier(): string
     {
         return $this->getEmail();
+    }
+
+    public function getImage(): ?MediaObject
+    {
+        return $this->image;
+    }
+
+    public function setImage(?MediaObject $image): static
+    {
+        $this->image = $image;
+
+        return $this;
     }
 }

@@ -31,7 +31,8 @@ class ClientCreateAction extends AbstractController
             $client->getName(),
             $client->getEmail(),
             $client->getPassword(),
-            $client->getCompany()
+            $client->getCompany(),
+            $client->getImage()
         );
 
         $this->clientManager->save($client, true);

@@ -82,6 +82,10 @@ class Client implements PasswordAuthenticatedUserInterface
     #[Groups(['client:read'])]
     private ?DateTimeImmutable $lastActivityAt = null;
 
+    #[ORM\ManyToOne]
+    #[Groups(['client:read', 'client:write'])]
+    private ?MediaObject $image = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -143,6 +147,18 @@ class Client implements PasswordAuthenticatedUserInterface
     public function setLastActivityAt(DateTimeImmutable $lastActivityAt): static
     {
         $this->lastActivityAt = $lastActivityAt;
+
+        return $this;
+    }
+
+    public function getImage(): ?MediaObject
+    {
+        return $this->image;
+    }
+
+    public function setImage(?MediaObject $image): static
+    {
+        $this->image = $image;
 
         return $this;
     }

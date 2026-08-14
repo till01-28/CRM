@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Component\User;
 
+use App\Entity\MediaObject;
 use App\Entity\User;
 use DateTimeZone;
 use Symfony\Component\Clock\DatePoint;
@@ -23,6 +24,7 @@ readonly class UserFactory
         string $givenName,
         string $email,
         string $password,
+        MediaObject $image,
     ): User {
 
         $user = new User();
@@ -33,6 +35,7 @@ readonly class UserFactory
         $user->setGivenName($givenName);
         $user->setEmail($email);
         $user->setPassword($hashedPassword);
+        $user->setImage($image);
         $user->setLastActivityAt(new DatePoint(timezone: new DateTimeZone("Asia/Tashkent")));
 
         return $user;

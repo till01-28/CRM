@@ -77,6 +77,10 @@ class Company implements PasswordAuthenticatedUserInterface
     #[Groups(['company:read'])]
     private ?DateTimeImmutable $lastActivityAt = null;
 
+    #[ORM\ManyToOne]
+    #[Groups(['company:read', 'company:write'])]
+    private ?MediaObject $image = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -126,6 +130,18 @@ class Company implements PasswordAuthenticatedUserInterface
     public function setLastActivityAt(DateTimeImmutable $lastActivityAt): static
     {
         $this->lastActivityAt = $lastActivityAt;
+
+        return $this;
+    }
+
+    public function getImage(): ?MediaObject
+    {
+        return $this->image;
+    }
+
+    public function setImage(?MediaObject $image): static
+    {
+        $this->image = $image;
 
         return $this;
     }

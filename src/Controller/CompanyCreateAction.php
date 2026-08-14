@@ -32,6 +32,7 @@ class CompanyCreateAction extends AbstractController
             $company->getName(),
             $company->getEmail(),
             $company->getPassword(),
+            $company->getImage()
         );
 
         $this->companyManager->save($company, true);
