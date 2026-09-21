@@ -12,11 +12,6 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 readonly class CompanyFactory
 {
-    public function __construct(private UserPasswordHasherInterface $passwordHasher)
-    {
-
-    }
-
     /**
      * @throws \DateMalformedStringException
      */
@@ -24,11 +19,9 @@ readonly class CompanyFactory
     {
         $company = new Company();
 
-        $hashedPassword = $this->passwordHasher->hashPassword($company, $password);
-
         $company -> setName($name);
         $company -> setEmail($email);
-        $company -> setPassword($hashedPassword);
+        $company -> setPassword($password);
         $company -> setImage($image);
         $company -> setLastActivityAt(new DatePoint(timezone: new DateTimeZone("Asia/Tashkent")));
 

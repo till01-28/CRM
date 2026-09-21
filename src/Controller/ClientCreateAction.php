@@ -24,6 +24,7 @@ class ClientCreateAction extends AbstractController
      * @throws \DateMalformedStringException
      */
     public function __invoke(Client $client):Client
+
     {
         $this->validator->validate($client);
 

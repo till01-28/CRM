@@ -13,11 +13,6 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 readonly class ClientFactory
 {
-    public function __construct(private UserPasswordHasherInterface $passwordHasher)
-    {
-
-    }
-
     /**
      * @throws \DateMalformedStringException
      */
@@ -31,11 +26,9 @@ readonly class ClientFactory
     {
         $client = new Client();
 
-        $hashedPassword = $this->passwordHasher->hashPassword($client, $password);
-
         $client -> setName($name);
         $client -> setEmail($email);
-        $client -> setPassword($hashedPassword);
+        $client -> setPassword($password);
         $client -> setCompany($company);
         $client -> setImage($image);
         $client -> setLastActivityAt(new DatePoint(timezone: new DateTimeZone("Asia/Tashkent")));
