@@ -9,9 +9,10 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
 use App\Controller\ClientCreateAction;
+use App\Controller\UpdateProcessor\UpdateProcessor;
 use App\Repository\ClientRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
@@ -23,7 +24,10 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection(),
+        new GetCollection(
+                uriTemplate: 'clients/getClients',
+                name: 'getClients'
+        ),
         new Post(
             uriTemplate: '/clients/createClient',
             controller: ClientCreateAction::class,
@@ -31,7 +35,8 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
             name: 'createClient'
         ),
         new Get(),
-        new Put(),
+
+        new Patch(),
         new Delete(),
     ],
     normalizationContext: ['groups' => ['client:read']],
@@ -40,10 +45,13 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 #[ApiFilter(SearchFilter::class, properties: [
     'id' => 'exact',
     'name' => 'partial',
-    'email' => 'exact'
+    'email' => 'partial',
+    'password' => 'partial',
+    'company.name' => 'partial',
+    'lastActivityAt' => 'partial'
 ])]
 #[ApiFilter(OrderFilter::class, properties: ['id' => 'ASC'])]
-#[ApiFilter(DateFilter::class, properties: ['lastActivityAt' => 'exact'])]
+#[ApiFilter(DateFilter::class, properties: ['lastActivityAt'])]
 
 class Client implements PasswordAuthenticatedUserInterface
 {
