@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\OpenApi\Model;
 use Doctrine\ORM\Mapping as ORM;
@@ -50,12 +51,12 @@ use Vich\UploaderBundle\Mapping\Attribute as Vich;
 class MediaObject
 {
     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
-    #[Groups(['media_object:read'])]
+    #[Groups(['media_object:read', 'user:read', 'client:read', 'company:read'])]
     private ?int $id = null;
 
     #[ApiProperty(writable: false, types: ['https://schema.org/contentUrl'])]
 
-    #[Groups(['media_object:read', 'client:read'])]
+    #[Groups(['media_object:read', 'client:read', 'user:read', 'company:read'])]
     public ?string $contentUrl = null;
 
     #[Vich\UploadableField(mapping: 'media_object', fileNameProperty: 'filePath')]

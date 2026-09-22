@@ -14,7 +14,6 @@ readonly class UserFactory
 {
     public function __construct(private UserPasswordHasherInterface $passwordHasher)
     {
-
     }
     /**
      * @throws \DateMalformedStringException
@@ -23,18 +22,19 @@ readonly class UserFactory
         string $familyName,
         string $givenName,
         string $email,
-        string $password,
+        string $plainPassword,
         MediaObject $image,
     ): User {
 
         $user = new User();
 
-        $hashedPassword = $this->passwordHasher->hashPassword($user, $password);
+        $hashedPassword = $this->passwordHasher->hashPassword($user, $plainPassword);
 
         $user->setFamilyName($familyName);
         $user->setGivenName($givenName);
         $user->setEmail($email);
         $user->setPassword($hashedPassword);
+        $user->setPlainPassword($plainPassword);
         $user->setImage($image);
         $user->setLastActivityAt(new DatePoint(timezone: new DateTimeZone("Asia/Tashkent")));
 

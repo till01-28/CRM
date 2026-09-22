@@ -31,7 +31,7 @@ class UserCreateAction extends AbstractController
             $user->getFamilyName(),
             $user->getGivenName(),
             $user->getEmail(),
-            $user->getPassword(),
+            $user->getPlainPassword(),
             $user->getImage(),
             );
 

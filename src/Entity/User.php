@@ -10,8 +10,9 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
+use App\Controller\UpdateProcessor\UpdateProcessor;
 use App\Controller\UserCreateAction;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
@@ -27,10 +28,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     operations: [
         new GetCollection(
-            security: "is_granted('ROLE_ADMIN')"
+            uriTemplate: '/users/getCollectionOfUsers',
+           // security: "is_granted('ROLE_ADMIN')"
         ),
         new Get(
-            security: "is_granted('ROLE_ADMIN') || object === user"
+            // security: "is_granted('ROLE_ADMIN') || object === user"
         ),
         new Post(
             uriTemplate: '/users/createUser',
@@ -42,7 +44,10 @@ use Symfony\Component\Validator\Constraints as Assert;
             uriTemplate: '/users/auth',
             name: 'userAuth'
         ),
-        new Put(),
+        new Patch(
+            denormalizationContext: ['groups' => ['user:update']],
+            processor: UpdateProcessor::class
+        ),
         new Delete(),
 
     ],
@@ -52,7 +57,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiFilter(SearchFilter::class, properties: [
     'id' => 'exact',
     'email' => 'partial',
-    'phone' => 'start'
+    'password' => 'partial',
+    'familyName' => 'partial',
+    'givenName' => 'partial',
+    'lastActivityAt' => 'partial'
 ])]
 #[ApiFilter(OrderFilter::class, properties: [ 'id'])]
 #[ApiFilter(DateFilter::class, properties: ['lastActivityAt'])]
@@ -68,7 +76,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     #[ORM\Column(length: 255)]
     #[Assert\Length(min: 2, minMessage:'Field should be at least 2 characters')]
     #[Assert\NotBlank(message: 'This field should not be blank')]
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups(['user:read', 'user:write', 'user:update'])]
     #[Assert\Regex(
         pattern: '/^[a-zA-Z]{2,}$/',
         message: 'Family name should contain only letters and at least 2 characters long'
@@ -78,7 +86,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     #[ORM\Column(length: 255)]
     #[Assert\Length(min:2, minMessage: 'Field should be at least 2 characters')]
     #[Assert\NotBlank(message:'This field should not be blank')]
-    #[Groups(['user:read','user:write'])]
+    #[Groups(['user:read','user:write', 'user:update'])]
     #[Assert\Regex(
         pattern: '/^[a-zA-Z]{2,}$/',
         message: 'Given name should contain only letters and at least 2 characters long'
@@ -89,7 +97,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     #[Assert\Length(min:12, minMessage: 'Field should be at least 12 characters')]
     #[Assert\NotBlank(message:'This field should not be blank')]
     #[Assert\Email(message: 'This is not a valid email address')]
-    #[Groups(['user:read','user:write'])]
+    #[Groups(['user:read','user:write','user:update'])]
     #[Assert\Regex(
         pattern: '/^[^\s@]+@[^\s@]+\.[^\s@]{2,4}$/',
         message: 'Invalid email address, please provide a valid email address.'
@@ -97,14 +105,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\Length(min:8, minMessage: 'Field should be at least 8 characters')]
-    #[Assert\NotBlank(message:'This field should not be blank')]
-    #[Groups(['user:read','user:write'])]
-    #[Assert\Regex(
-        pattern: '/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#(){}[\]^+=._-]).{8,}$/',
-        message: 'Password should contain at least one uppercase, one lowercase, one digit, one special character and
-        8 characters.'
-    )]
+    #[Groups(['user:update'])]
     private ?string $password = null;
 
     #[ORM\Column]
@@ -118,6 +119,12 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     #[ORM\ManyToOne]
     #[Groups(['user:read', 'user:write'])]
     private ?MediaObject $image = null;
+
+    #[ORM\Column(length: 255)]
+    #[Assert\Length(min:8, minMessage: 'Field should be at least 8 characters')]
+    #[Assert\NotBlank(message:'This field should not be blank')]
+    #[Groups(['user:read', 'user:write','user:update'])]
+    private ?string $plainPassword = null;
 
     public function getId(): ?int
     {
@@ -198,7 +205,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
 
     public function getRoles(): array
     {
-        return ["ROLE_USER"];
+        return $this->role;
     }
 
     public function eraseCredentials(): void
@@ -219,6 +226,18 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     public function setImage(?MediaObject $image): static
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(string $plainPassword): static
+    {
+        $this->plainPassword = $plainPassword;
 
         return $this;
     }

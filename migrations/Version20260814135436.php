@@ -14,7 +14,7 @@ final class Version20260814135436 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'created image property for each Entity';
     }
 
     public function up(Schema $schema): void

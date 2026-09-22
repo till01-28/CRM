@@ -13,6 +13,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Controller\CompanyCreateAction;
+use App\Controller\UpdateProcessor\UpdateProcessor;
 use App\Repository\CompanyRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
@@ -41,7 +42,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiFilter(SearchFilter::class, properties: [
     'id' => 'exact',
     'name' => 'partial',
-    'email' => 'partial'
+    'email' => 'partial',
+    'password' => 'partial',
+    'lastActivityAt' => 'partial'
 ])]
 #[ApiFilter(OrderFilter::class, properties: ['id' => 'ACS'])]
 #[ApiFilter(DateFilter::class, properties: ['lastActivityAt'])]
