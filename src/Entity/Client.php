@@ -12,7 +12,6 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Controller\ClientCreateAction;
-use App\Controller\UpdateProcessor\UpdateProcessor;
 use App\Repository\ClientRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
