@@ -30,7 +30,8 @@
         "symfony/twig-bundle": "7.4.*",
         "symfony/validator": "7.4.*",
         "symfony/yaml": "7.4.*",
-        "vich/uploader-bundle": "^2.9"
+        "vich/uploader-bundle": "^2.9",
+        "ext-http": "*"
     },
     "require-dev": {
         "symfony/maker-bundle": "^1.67"
