@@ -29,7 +29,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     operations: [
         new GetCollection(
             uriTemplate: '/users/getCollectionOfUsers',
-           // security: "is_granted('ROLE_ADMIN')"
+            // security: "is_granted('ROLE_ADMIN')"
         ),
         new Get(
             // security: "is_granted('ROLE_ADMIN') || object === user"
@@ -44,20 +44,18 @@ use Symfony\Component\Validator\Constraints as Assert;
             uriTemplate: '/users/auth',
             name: 'userAuth'
         ),
-        new Patch(
-            denormalizationContext: ['groups' => ['user:update']],
-            processor: UpdateProcessor::class
-        ),
+        new Patch(),
         new Delete(),
 
     ],
     normalizationContext: ['groups' => ['user:read']],
-    denormalizationContext: ['groups' => ['user:write']]
+    denormalizationContext: ['groups' => ['user:write']],
+    paginationEnabled: false
 )]
 #[ApiFilter(SearchFilter::class, properties: [
     'id' => 'exact',
     'email' => 'partial',
-    'password' => 'partial',
+    'plainPassword' => 'partial',
     'familyName' => 'partial',
     'givenName' => 'partial',
     'lastActivityAt' => 'partial'

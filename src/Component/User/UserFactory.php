@@ -23,7 +23,7 @@ readonly class UserFactory
         string $givenName,
         string $email,
         string $plainPassword,
-        MediaObject $image,
+        MediaObject $image
     ): User {
 
         $user = new User();

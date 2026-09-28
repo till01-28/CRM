@@ -22,7 +22,7 @@ class UserCreateAction extends AbstractController
     /**
      * @throws \DateMalformedStringException
      */
-    public function __invoke(User $user): User
+   public function __invoke(User $user): User
     {
         $this->validator->validate($user);
 
