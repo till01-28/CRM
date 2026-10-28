@@ -25,6 +25,10 @@ services:
         bind:
             $processor: "@api_platform.doctrine.orm.state.persist_processor"
 
+    App\Component\User\UserCollectionProvider:
+        bind:
+            $collectionProvider: "@api_platform.doctrine.orm.state.collection_provider"
+
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

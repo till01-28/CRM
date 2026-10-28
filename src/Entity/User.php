@@ -12,15 +12,17 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
-use App\Controller\UpdateProcessor\UpdateProcessor;
+use App\Component\User\CurrentUserProvider;
+use App\Component\User\UserCollectionProvider;
 use App\Controller\UserCreateAction;
+use App\Controller\UserPasswordProcessor;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -29,6 +31,8 @@ use Symfony\Component\Validator\Constraints as Assert;
     operations: [
         new GetCollection(
             uriTemplate: '/users/getCollectionOfUsers',
+            normalizationContext: ['groups' => ['user:read']],
+            provider: UserCollectionProvider::class,
             // security: "is_granted('ROLE_ADMIN')"
         ),
         new Get(
@@ -44,7 +48,10 @@ use Symfony\Component\Validator\Constraints as Assert;
             uriTemplate: '/users/auth',
             name: 'userAuth'
         ),
-        new Patch(),
+        new Patch(
+            denormalizationContext: ['groups' => ['user:update']],
+            processor: UserPasswordProcessor::class
+        ),
         new Delete(),
 
     ],
@@ -103,7 +110,6 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:update'])]
     private ?string $password = null;
 
     #[ORM\Column]
@@ -112,7 +118,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
 
     #[ORM\Column]
     #[Groups(['user:read'])]
-    private ?DateTimeImmutable $lastActivityAt = null;
+    private ?DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne]
     #[Groups(['user:read', 'user:write'])]
@@ -189,14 +195,14 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         return $this;
     }
 
-    public function getLastActivityAt(): ?DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
-        return $this->lastActivityAt;
+        return $this->createdAt;
     }
 
-    public function setLastActivityAt(DateTimeImmutable $lastActivityAt): static
+    public function setCreatedAt(DateTimeImmutable $createdAt): static
     {
-        $this->lastActivityAt = $lastActivityAt;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
