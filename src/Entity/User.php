@@ -38,6 +38,12 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Get(
             // security: "is_granted('ROLE_ADMIN') || object === user"
         ),
+        new Get(
+            uriTemplate: '/users',
+            normalizationContext: ['groups' => ['user:read']],
+            name: 'currentUser',
+            provider: CurrentUserProvider::class
+        ),
         new Post(
             uriTemplate: '/users/createUser',
             controller: UserCreateAction::class,
