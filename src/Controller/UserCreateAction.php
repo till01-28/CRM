@@ -33,7 +33,7 @@ class UserCreateAction extends AbstractController
             $user->getEmail(),
             $user->getPlainPassword(),
             $user->getImage(),
-            );
+        );
 
         $this->userManager->save($user, true);
 

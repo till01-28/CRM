@@ -16,20 +16,17 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
-    //    /**
-    //     * @return User[] Returns an array of User objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('u.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function countCreatedToday(): int
+    {
+        $startOfDay = new \DateTimeImmutable('today midnight');
+
+        return(int) $this->createQueryBuilder('u')
+            ->select('count(u.id)')
+            ->andWhere('u.createdAt >= :start')
+            ->setParameter('start', $startOfDay)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 
     //    public function findOneBySomeField($value): ?User
     //    {

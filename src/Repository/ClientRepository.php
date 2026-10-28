@@ -17,31 +17,17 @@ class ClientRepository extends ServiceEntityRepository
         parent::__construct($registry, Client::class);
     }
 
-        /**
-         * @return Client[] Returns an array of Client objects
-         */
-        public function findClientsByCompanyName(string $companyName): array
-        {
-            return $this->createQueryBuilder('c')
-                ->select(
-                    'c.id',
-                    'c.name',
-                    'cc.name as clientsCompanyName',
-                    'ci.id as clientsImgId',
-                    'c.email',
-                    'c.password',
-                    'c.lastActivityAt'
-                )
-                ->leftJoin('c.company', 'cc')
-                ->leftJoin('c.image', 'ci')
-                ->andWhere('cc.name LIKE :companyName')
-                ->setParameter('companyName', '%' .$companyName. '%')
-                ->orderBy('c.id', 'DESC')
-                ->setMaxResults(10)
-                ->getQuery()
-                ->getResult()
-            ;
-        }
+    public function countCreatedToday(): int
+    {
+        $startOfDay = new \DateTimeImmutable('today midnight');
+
+        return(int) $this->createQueryBuilder('c')
+            ->select('count(c.id)')
+            ->andWhere('c.createdAt >= :start')
+            ->setParameter('start', $startOfDay)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 
         public function findOneClientByName($clientName): ?Client
       {

@@ -16,20 +16,17 @@ class CompanyRepository extends ServiceEntityRepository
         parent::__construct($registry, Company::class);
     }
 
-    //    /**
-    //     * @return Company[] Returns an array of Company objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('c.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function countCreatedToday(): int
+    {
+        $startOfDay = new \DateTimeImmutable('today midnight');
+
+        return (int) $this->createQueryBuilder('c')
+            ->select('count(c.id)')
+            ->andWhere('c.createdAt >= :start')
+            ->setParameter('start', $startOfDay)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 
     //    public function findOneBySomeField($value): ?Company
     //    {
