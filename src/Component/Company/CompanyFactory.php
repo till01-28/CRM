@@ -8,7 +8,6 @@ use App\Entity\Company;
 use App\Entity\MediaObject;
 use DateTimeZone;
 use Symfony\Component\Clock\DatePoint;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 readonly class CompanyFactory
 {
@@ -23,7 +22,7 @@ readonly class CompanyFactory
         $company -> setEmail($email);
         $company -> setPassword($password);
         $company -> setImage($image);
-        $company -> setLastActivityAt(new DatePoint(timezone: new DateTimeZone("Asia/Tashkent")));
+        $company -> setCreatedAt(new DatePoint(timezone: new DateTimeZone("Asia/Tashkent")));
 
         return $company;
     }

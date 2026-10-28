@@ -87,7 +87,7 @@ class Client implements PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     #[Groups(['client:read'])]
-    private ?DateTimeImmutable $lastActivityAt = null;
+    private ?DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne]
     #[Groups(['client:read', 'client:write'])]
@@ -146,14 +146,14 @@ class Client implements PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getLastActivityAt(): ?DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
-        return $this->lastActivityAt;
+        return $this->createdAt;
     }
 
-    public function setLastActivityAt(DateTimeImmutable $lastActivityAt): static
+    public function setCreatedAt(DateTimeImmutable $createdAt): static
     {
-        $this->lastActivityAt = $lastActivityAt;
+        $this->createdAt = $createdAt;
 
         return $this;
     }

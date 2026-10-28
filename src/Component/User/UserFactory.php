@@ -36,7 +36,7 @@ readonly class UserFactory
         $user->setPassword($hashedPassword);
         $user->setPlainPassword($plainPassword);
         $user->setImage($image);
-        $user->setLastActivityAt(new DatePoint(timezone: new DateTimeZone("Asia/Tashkent")));
+        $user->setCreatedAt(new DatePoint(timezone: new DateTimeZone("Asia/Tashkent")));
 
         return $user;
     }
