@@ -69,9 +69,8 @@ use Symfony\Component\Validator\Constraints as Assert;
     'id' => 'exact',
     'email' => 'partial',
     'plainPassword' => 'partial',
-    'familyName' => 'partial',
-    'givenName' => 'partial',
-    'lastActivityAt' => 'partial'
+    'fullName' => 'partial',
+    'createdAt' => 'partial'
 ])]
 #[ApiFilter(OrderFilter::class, properties: [ 'id'])]
 #[ApiFilter(DateFilter::class, properties: ['lastActivityAt'])]
@@ -88,21 +87,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     #[Assert\Length(min: 2, minMessage:'Field should be at least 2 characters')]
     #[Assert\NotBlank(message: 'This field should not be blank')]
     #[Groups(['user:read', 'user:write', 'user:update'])]
-    #[Assert\Regex(
-        pattern: '/^[a-zA-Z]{2,}$/',
-        message: 'Family name should contain only letters and at least 2 characters long'
-    )]
-    private ?string $familyName = null;
-
-    #[ORM\Column(length: 255)]
-    #[Assert\Length(min:2, minMessage: 'Field should be at least 2 characters')]
-    #[Assert\NotBlank(message:'This field should not be blank')]
-    #[Groups(['user:read','user:write', 'user:update'])]
-    #[Assert\Regex(
-        pattern: '/^[a-zA-Z]{2,}$/',
-        message: 'Given name should contain only letters and at least 2 characters long'
-    )]
-    private ?string $givenName = null;
+    private ?string $fullName = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\Length(min:12, minMessage: 'Field should be at least 12 characters')]
@@ -141,30 +126,17 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         return $this->id;
     }
 
-    public function getFamilyName(): ?string
+    public function getFullName(): ?string
     {
-        return $this->familyName;
+        return $this->fullName;
     }
 
-    public function setFamilyName(string $familyName): static
+    public function setFullName(string $fullName): static
     {
-        $this->familyName = $familyName;
+        $this->fullName = $fullName;
 
         return $this;
     }
-
-    public function getGivenName(): ?string
-    {
-        return $this->givenName;
-    }
-
-    public function setGivenName(string $givenName): static
-    {
-        $this->givenName = $givenName;
-
-        return $this;
-    }
-
     public function getEmail(): ?string
     {
         return $this->email;

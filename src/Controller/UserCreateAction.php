@@ -28,8 +28,7 @@ class UserCreateAction extends AbstractController
 
         $user = $this->userFactory->create(
 
-            $user->getFamilyName(),
-            $user->getGivenName(),
+            $user->getFullName(),
             $user->getEmail(),
             $user->getPlainPassword(),
             $user->getImage(),

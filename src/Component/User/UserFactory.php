@@ -19,8 +19,7 @@ readonly class UserFactory
      * @throws \DateMalformedStringException
      */
     public function create(
-        string $familyName,
-        string $givenName,
+        string $fullName,
         string $email,
         string $plainPassword,
         MediaObject $image
@@ -30,8 +29,7 @@ readonly class UserFactory
 
         $hashedPassword = $this->passwordHasher->hashPassword($user, $plainPassword);
 
-        $user->setFamilyName($familyName);
-        $user->setGivenName($givenName);
+        $user->setFullName($fullName);
         $user->setEmail($email);
         $user->setPassword($hashedPassword);
         $user->setPlainPassword($plainPassword);
