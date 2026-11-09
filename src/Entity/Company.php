@@ -43,10 +43,10 @@ use Symfony\Component\Validator\Constraints as Assert;
     'name' => 'partial',
     'email' => 'partial',
     'password' => 'partial',
-    'lastActivityAt' => 'partial'
+    'createdAt' => 'partial'
 ])]
 #[ApiFilter(OrderFilter::class, properties: ['id' => 'ACS'])]
-#[ApiFilter(DateFilter::class, properties: ['lastActivityAt'])]
+#[ApiFilter(DateFilter::class, properties: ['createdAt'])]
 #[UniqueEntity('email',message:'This email is already registered')]
 class Company implements PasswordAuthenticatedUserInterface
 {

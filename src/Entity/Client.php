@@ -47,10 +47,10 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
     'email' => 'partial',
     'password' => 'partial',
     'company.name' => 'partial',
-    'lastActivityAt' => 'partial'
+    'createdAt' => 'partial'
 ])]
 #[ApiFilter(OrderFilter::class, properties: ['id' => 'ASC'])]
-#[ApiFilter(DateFilter::class, properties: ['lastActivityAt'])]
+#[ApiFilter(DateFilter::class, properties: ['createdAt'])]
 
 class Client implements PasswordAuthenticatedUserInterface
 {
