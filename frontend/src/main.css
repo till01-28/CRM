@@ -1,0 +1,169 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+/* -- This code below is for background-color of the pages -- */
+.background-color {
+    background-color: #F5F6F8;
+    min-height: 100vh;
+}
+/* -- END -- */
+
+/* -- Code below opens and collapse the sidebar -- */
+
+.table-content {
+    margin-left: 68px;
+    min-width: 0;
+    width: calc(100% - 68px);
+    transition: margin-left 0.2s ease, width 0.2s ease;
+}
+
+.table-content.sidebar-expanded {
+    margin-left: 256px;
+    width: calc(100% - 256px);
+}
+
+.sidebar {
+    width: 68px;
+    z-index: 1030;
+}
+
+.sidebar.expand {
+    width: 256px;
+}
+
+.sidebar .sidebar-text {
+    display: none;
+}
+
+.sidebar.expand .sidebar-text {
+    display: inline;
+}
+
+/* --END -- */
+
+/* --  This code below is responsible for mobile behavior of the sidebar -- */
+@media (max-width: 768px)
+{
+    .sidebar {
+        width: 256px;
+        transform: translateX(-100%);
+        transition: transform 0.2s ease;
+    }
+
+    .sidebar.expand {
+        transform: translateX(0);
+    }
+
+    .table-content{
+        margin-left: 0;
+    }
+
+    .table-content.sidebar-expanded {
+        margin-left: 256px;
+    }
+}
+/* -- END -- */
+
+/* -- This code is responsible for images of 3 entity tables -- */
+.img-table {
+    width: 35px;
+    height: 35px;
+}
+/* -- END -- */
+
+/* -- This code below is responsible for deleteTrashCan and editPen icons in tables -- */
+.th_5 {
+    width: 10px;
+}
+
+.th_6{
+    width: 90px;
+}
+
+/* -- END -- */
+
+/* -- This code below is responsible for responsiveness of search boxes -- */
+@media (max-width: 1200px) {
+    .search-container {
+        flex-wrap: wrap;
+    }
+}
+/* -- END -- */
+
+/* --This CSS code below is for asterisk components on label which means fields are mandatory to fill-- */
+.asterisk{
+    color: #109CF1 !important;
+    position:absolute;
+    font-size: 6px;
+    line-height: 100%;
+    padding-top: 6px;
+}
+/* -- END -- */
+
+/* -- Add whiteness the modal background and centers the header text -- */
+.modal-backdrop.show {
+    opacity: 0.1;
+}
+
+.modal-content {
+    background-color: #ffffff;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.18);
+}
+
+.modal-header {
+    justify-content: center;
+}
+/* -- END -- */
+
+/* -- When hovered over deleteTrashCan and editPen icons shows and changes the cursor -- */
+.del-icon-pos{
+    display: inline !important;
+}
+
+.del-edit-icons{
+    cursor: pointer;
+    .pen > * {
+        display: none;
+    }
+    .trashCan > * {
+        display: none;
+    }
+}
+.del-edit-icons:hover{
+    .pen > * {
+        display: table-cell;
+    }
+    .trashCan > *{
+        display: table-cell;
+    }
+}
+/* -- END -- */
+
+/* -- Responsible for space that each column of table-header takes, it distributes according to the % given -- */
+/* -- Specifically for User and Company pages as they have 4 table-headers -- */
+#dataTable th:nth-child(1),
+#dataTable td:nth-child(1) {
+    width: 28%;
+}
+
+#dataTable th:nth-child(2),
+#dataTable td:nth-child(2) {
+    width: 28%;
+}
+
+#dataTable th:nth-child(3),
+#dataTable td:nth-child(3) {
+    width: 27%;
+}
+
+#dataTable th:nth-child(4),
+#dataTable td:nth-child(4) {
+    width: 12%;
+}
+
+#dataTable th:nth-child(5),
+#dataTable td:nth-child(5),
+#dataTable th:nth-child(6),
+#dataTable td:nth-child(6)
+{
+    width: 4%;
+}
+/* -- END -- */
